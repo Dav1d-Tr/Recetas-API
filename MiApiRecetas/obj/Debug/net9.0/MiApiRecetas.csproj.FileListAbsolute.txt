@@ -163,3 +163,4 @@ E:\Projects\MiSolucionRecetas\MiApiRecetas\obj\Debug\net9.0\ref\MiApiRecetas.dll
 E:\Projects\MiSolucionRecetas\MiApiRecetas\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\Projects\MiSolucionRecetas\MiApiRecetas\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\Projects\MiSolucionRecetas\MiApiRecetas\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\Projects\MiSolucionRecetas\MiApiRecetas\obj\Debug\net9.0\MiApiRecetas.sourcelink.json
