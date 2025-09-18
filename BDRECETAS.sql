@@ -17,7 +17,8 @@ INSERT INTO categorias (id, nombre) VALUES
 (1, 'Desayuno'),
 (2, 'Almuerzo'),
 (3, 'Cena'),
-(4, 'Postre');
+(4, 'Postre').
+(4, 'Recipe');
 GO
 
 -- 3️⃣ Tabla: Ingredientes

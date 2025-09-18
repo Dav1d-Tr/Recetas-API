@@ -31,6 +31,7 @@ namespace MiApiRecetas.Controllers
             Titulo = receta.Titulo,
             Descripcion = receta.Descripcion,
             CategoriaId = receta.CategoriaId,
+            CategoriaNombre = receta.Categoria != null ? receta.Categoria.Nombre : null,
             TiempoPreparacion = receta.TiempoPreparacion,
             Dificultad = receta.Dificultad,
             FechaCreacion = receta.FechaCreacion,
@@ -68,8 +69,9 @@ namespace MiApiRecetas.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<RecetaDto>> GetReceta(int id)
         {
-            var receta = await _context.Recetas.FindAsync(id);
-            if (receta == null)
+            var receta = await _context.Recetas
+                               .Include(r => r.Categoria) // 🔹
+                               .FirstOrDefaultAsync(r => r.Id == id);            if (receta == null)
             {
                 return NotFound();
             }
@@ -79,7 +81,9 @@ namespace MiApiRecetas.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecetaDto>>> GetRecetas()
         {
-            var recetas = await _context.Recetas.ToListAsync();
+            var recetas = await _context.Recetas
+                                .Include(r => r.Categoria) // 🔹
+                                .ToListAsync();
             return recetas.Select(ToDto).ToList();
         }
 
