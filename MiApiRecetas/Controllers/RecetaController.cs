@@ -1,16 +1,13 @@
 using MiApiRecetas.Data;
 using Microsoft.AspNetCore.Mvc;
 using MiApiRecetas.Dto;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using MiApiRecetas.Models;
-using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.Identity.Client;
 using Microsoft.EntityFrameworkCore;
 
 namespace MiApiRecetas.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
     public class RecetaController : ControllerBase
     {
         private readonly BdrecetasContext _context;
@@ -20,10 +17,7 @@ namespace MiApiRecetas.Controllers
             _context = context;
         }
 
-        private bool IsValidTime(int time)
-        {
-            return time > 0;
-        }
+        private bool IsValidTime(int time) => time > 0;
 
         private RecetaDto ToDto(Receta receta) => new RecetaDto
         {
@@ -38,31 +32,29 @@ namespace MiApiRecetas.Controllers
             ImagenUrl = receta.ImagenUrl
         };
 
-        private Receta ToEntity(RecetaDto dto) => new Receta
-        {
-            Id = dto.Id,
-            Titulo = dto.Titulo,
-            Descripcion = dto.Descripcion,
-            CategoriaId = dto.CategoriaId,
-            TiempoPreparacion = dto.TiempoPreparacion,
-            Dificultad = dto.Dificultad,
-            FechaCreacion = dto.FechaCreacion,
-            ImagenUrl = dto.ImagenUrl
-        };
-
         [HttpPost]
-        public async Task<ActionResult<RecetaDto>> CreateReceta(RecetaDto recetaDto)
+        public async Task<ActionResult<RecetaDto>> CreateReceta(CreateRecetaDto dto)
         {
-            if (!IsValidTime(recetaDto.TiempoPreparacion))
+            if (!IsValidTime(dto.TiempoPreparacion))
             {
-                return BadRequest("El tiempo de preparacion debe se mayor a 0");
+                return BadRequest("El tiempo de preparación debe ser mayor a 0");
             }
 
-            var receta = ToEntity(recetaDto);
+            var receta = new Receta
+            {
+                Titulo = dto.Titulo,
+                Descripcion = dto.Descripcion,
+                CategoriaId = dto.CategoriaId,
+                TiempoPreparacion = dto.TiempoPreparacion,
+                Dificultad = dto.Dificultad,
+                ImagenUrl = dto.ImagenUrl,
+                FechaCreacion = DateTime.Now // 🔹 lo maneja el servidor
+            };
+
             _context.Recetas.Add(receta);
             await _context.SaveChangesAsync();
 
-            recetaDto.Id = receta.Id;
+            var recetaDto = ToDto(receta);
             return CreatedAtAction(nameof(GetReceta), new { id = receta.Id }, recetaDto);
         }
 
@@ -70,11 +62,14 @@ namespace MiApiRecetas.Controllers
         public async Task<ActionResult<RecetaDto>> GetReceta(int id)
         {
             var receta = await _context.Recetas
-                               .Include(r => r.Categoria) // 🔹
-                               .FirstOrDefaultAsync(r => r.Id == id);            if (receta == null)
+                                       .Include(r => r.Categoria)
+                                       .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (receta == null)
             {
                 return NotFound();
             }
+
             return ToDto(receta);
         }
 
@@ -82,22 +77,26 @@ namespace MiApiRecetas.Controllers
         public async Task<ActionResult<IEnumerable<RecetaDto>>> GetRecetas()
         {
             var recetas = await _context.Recetas
-                                .Include(r => r.Categoria) // 🔹
-                                .ToListAsync();
+                                        .Include(r => r.Categoria)
+                                        .ToListAsync();
+
             return recetas.Select(ToDto).ToList();
         }
 
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReceta(RecetaDto recetaDto)
+        public async Task<IActionResult> UpdateReceta(int id, RecetaDto recetaDto)
         {
+            if (id != recetaDto.Id)
+            {
+                return BadRequest("El ID de la URL no coincide con el del objeto");
+            }
 
             if (!IsValidTime(recetaDto.TiempoPreparacion))
             {
-                return BadRequest("El tiempo de preparacion debe se mayor a 0");
+                return BadRequest("El tiempo de preparación debe ser mayor a 0");
             }
 
-            var receta = await _context.Recetas.FindAsync(recetaDto.Id);
+            var receta = await _context.Recetas.FindAsync(id);
             if (receta == null)
             {
                 return NotFound();
@@ -108,8 +107,8 @@ namespace MiApiRecetas.Controllers
             receta.CategoriaId = recetaDto.CategoriaId;
             receta.TiempoPreparacion = recetaDto.TiempoPreparacion;
             receta.Dificultad = recetaDto.Dificultad;
-            receta.FechaCreacion = recetaDto.FechaCreacion;
             receta.ImagenUrl = recetaDto.ImagenUrl;
+            // 🔹 No tocamos FechaCreacion (se mantiene la original)
 
             await _context.SaveChangesAsync();
             return NoContent();
