@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MiApiRecetas.Models;
 
 public partial class Categoria

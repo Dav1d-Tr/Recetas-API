@@ -45,36 +45,34 @@ namespace MiApiRecetas.Controllers
 
         // POST: api/recetas/{recetaId}/ingredientes
         [HttpPost]
-        public async Task<ActionResult> AddIngredienteToReceta(int recetaId, [FromBody] int ingredienteId)
+        public async Task<ActionResult> AddIngredientesToReceta(int recetaId, [FromBody] List<int> ingredientesIds)
         {
             var receta = await _context.Recetas.FindAsync(recetaId);
             if (receta == null)
                 return NotFound(new { mensaje = $"Receta {recetaId} no encontrada" });
 
-            var ingrediente = await _context.Ingredientes.FindAsync(ingredienteId);
-            if (ingrediente == null)
-                return NotFound(new { mensaje = $"Ingrediente {ingredienteId} no encontrado" });
-
-            var existeRelacion = await _context.RecetaIngredientes
-                .AnyAsync(ri => ri.RecetaId == recetaId && ri.IngredienteId == ingredienteId);
-
-            if (existeRelacion)
-                return BadRequest(new { mensaje = "El ingrediente ya está asociado a la receta" });
-
-            var recetaIngrediente = new RecetaIngrediente
+            foreach (var ingredienteId in ingredientesIds)
             {
-                RecetaId = recetaId,
-                IngredienteId = ingredienteId
-            };
+                var ingrediente = await _context.Ingredientes.FindAsync(ingredienteId);
+                if (ingrediente == null)
+                    return NotFound(new { mensaje = $"Ingrediente {ingredienteId} no encontrado" });
 
-            _context.RecetaIngredientes.Add(recetaIngrediente);
+                var existeRelacion = await _context.RecetaIngredientes
+                    .AnyAsync(ri => ri.RecetaId == recetaId && ri.IngredienteId == ingredienteId);
+
+                if (!existeRelacion)
+                {
+                    _context.RecetaIngredientes.Add(new RecetaIngrediente
+                    {
+                        RecetaId = recetaId,
+                        IngredienteId = ingredienteId
+                    });
+                }
+            }
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetIngredientesByReceta),
-                new { recetaId },
-                new { mensaje = $"Ingrediente {ingredienteId} agregado a la receta {recetaId}" }
-            );
+            return Ok(new { mensaje = "Ingredientes agregados correctamente" });
         }
 
         // DELETE: api/recetas/{recetaId}/ingredientes/{ingredienteId}

@@ -1,52 +1,49 @@
-using MiApiRecetas.Data;
 using Microsoft.EntityFrameworkCore;
+using MiApiRecetas.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 🔹 Agregar servicios al contenedor
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
-var connectionString = builder.Configuration.GetConnectionString("SqlServer");
-
-builder.Services.AddDbContext<BdrecetasContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
-
-// Swagger
+// 🔹 Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 🔹 Configuración de CORS (antes del Build)
+// 🔹 Conexión a la BD
+var connectionString = builder.Configuration.GetConnectionString("SqlServer");
+builder.Services.AddDbContext<BdrecetasContext>(options =>
+    options.UseSqlServer(connectionString)
+);
+
+// 🔹 Configuración de CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173") // tu frontend React
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // URL del frontend React
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 🔹 Middleware de desarrollo
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-// 🔹 Activar CORS (después del Build, antes de Authorization)
+// 🔹 Activar CORS
 app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
+// 🔹 Mapear controladores
 app.MapControllers();
 
 app.Run();

@@ -47,7 +47,7 @@ namespace MiApiRecetas.Controllers
         {
             if (!IsValidQualification(resenaDto.Calificacion))
             {
-                return BadRequest("El tiempo de la calificación debe estar entre 0 y 5");
+                return BadRequest("La calificación debe estar entre 0 y 5");
             }
 
             var recetaExiste = await _context.Recetas.AnyAsync(r => r.Id == resenaDto.RecetaId);
@@ -57,12 +57,15 @@ namespace MiApiRecetas.Controllers
             }
 
             var resena = ToEntity(resenaDto);
+            resena.Fecha = DateTime.Now; // 👈 asignar fecha aquí
+
             _context.Resenas.Add(resena);
             await _context.SaveChangesAsync();
 
-            resenaDto.Id = resena.Id;
-            return CreatedAtAction(nameof(GetResena), new { id = resena.Id }, resenaDto);
+            var resenaCreada = ToDto(resena);
+            return CreatedAtAction(nameof(GetResena), new { id = resena.Id }, resenaCreada);
         }
+
 
         [HttpGet("Receta/{recetaId}")]
         public async Task<ActionResult<IEnumerable<ResenaDto>>> GetResenasByReceta(int recetaId)

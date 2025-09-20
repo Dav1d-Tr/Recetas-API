@@ -26,21 +26,19 @@ public partial class BdrecetasContext : DbContext
 
     public virtual DbSet<Resena> Resenas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-SM3F8PEO;Database=BDRECETAS;Trusted_Connection=True;TrustServerCertificate=True;");
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+      //  => optionsBuilder.UseSqlServer("Server=LAPTOP-SM3F8PEO;Database=BDRECETAS;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Categoria>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__categori__3213E83F35F36DEB");
+            entity.HasKey(e => e.Id).HasName("PK__categori__3213E83FB4568FE4");
 
             entity.ToTable("categorias");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -49,13 +47,11 @@ public partial class BdrecetasContext : DbContext
 
         modelBuilder.Entity<Ingrediente>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ingredie__3213E83FEC17E948");
+            entity.HasKey(e => e.Id).HasName("PK__ingredie__3213E83FA106A4DE");
 
             entity.ToTable("ingredientes");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -64,13 +60,11 @@ public partial class BdrecetasContext : DbContext
 
         modelBuilder.Entity<Receta>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__recetas__3213E83FD1A55F0F");
+            entity.HasKey(e => e.Id).HasName("PK__recetas__3213E83FB1D86598");
 
             entity.ToTable("recetas");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoriaId).HasColumnName("categoria_id");
             entity.Property(e => e.Descripcion)
                 .HasColumnType("text")
@@ -101,7 +95,7 @@ public partial class BdrecetasContext : DbContext
 
         modelBuilder.Entity<RecetaIngrediente>(entity =>
         {
-            entity.HasKey(e => new { e.RecetaId, e.IngredienteId }).HasName("PK__receta_i__782404474336C4A9");
+            entity.HasKey(e => new { e.RecetaId, e.IngredienteId }).HasName("PK__receta_i__78240447462CE8B2");
 
             entity.ToTable("receta_ingredientes");
 
@@ -123,15 +117,13 @@ public partial class BdrecetasContext : DbContext
 
         modelBuilder.Entity<Resena>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__resenas__3213E83FF45C90D1");
+            entity.HasKey(e => e.Id).HasName("PK__resenas__3213E83F1079C85C");
 
             entity.ToTable("resenas");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Calificacion)
-                .HasColumnType("decimal(2, 1)")
+                .HasColumnType("decimal(3, 1)")
                 .HasColumnName("calificacion");
             entity.Property(e => e.Comentario)
                 .HasColumnType("text")

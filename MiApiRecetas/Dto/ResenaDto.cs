@@ -6,7 +6,6 @@ namespace MiApiRecetas.Dto;
 
 public partial class ResenaDto
 {
-    [Required]
     public int Id { get; set; }
 
     [Required]
@@ -21,6 +20,5 @@ public partial class ResenaDto
     [Required]
     public decimal Calificacion { get; set; }
 
-    [Required]
     public DateTime? Fecha { get; set; }
 }
