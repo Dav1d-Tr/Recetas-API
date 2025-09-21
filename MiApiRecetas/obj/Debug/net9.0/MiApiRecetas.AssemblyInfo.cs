@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MiApiRecetas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35980b5d8d201d4e43ea32d1e0fac512208f9b3c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f9111fd3a8fd0bcc7f84a45824dc8481ee79aac9")]
 [assembly: System.Reflection.AssemblyProductAttribute("MiApiRecetas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MiApiRecetas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
