@@ -9,4 +9,11 @@ RUN dotnet publish ./MiApiRecetas/MiApiRecetas.csproj -c Release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
+
+# 🔹 Render define la variable PORT automáticamente
+ENV ASPNETCORE_URLS=http://+:${PORT}
+
+# 🔹 Exponemos ese puerto (opcional, pero recomendable)
+EXPOSE 5000
+
 ENTRYPOINT ["dotnet", "MiApiRecetas.dll"]
