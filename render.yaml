@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: recetas-api
-    runtime: dotnet
+    name: mi-api-recetas
+    env: dotnet
     plan: free
-    buildCommand: "dotnet restore && dotnet publish -c Release -o out"
+    buildCommand: "dotnet restore ./MiApiRecetas/MiApiRecetas.csproj && dotnet publish ./MiApiRecetas/MiApiRecetas.csproj -c Release -o out"
     startCommand: "dotnet out/MiApiRecetas.dll"
     envVars:
       - key: ConnectionStrings__SqlServer
-        sync: false
+        sync: false   # Render usará la variable que ya configuraste en el panel
