@@ -1,10 +1,9 @@
 services:
   - type: web
-    name: mi-api-recetas        # Nombre libre para tu servicio
-    env: dotnet                 # Este es el runtime correcto
-    plan: free                  # Plan gratuito
-    buildCommand: "dotnet restore ./MiApiRecetas/MiApiRecetas.csproj && dotnet publish ./MiApiRecetas/MiApiRecetas.csproj -c Release -o out"
-    startCommand: "dotnet out/MiApiRecetas.dll"
+    name: mi-api-recetas
+    env: docker
+    plan: free
+    dockerfilePath: ./MiApiRecetas/Dockerfile
     envVars:
       - key: ConnectionStrings__SqlServer
-        sync: false   # Render usará el valor que pongas en el panel de Variables de Entorno
+        sync: false
