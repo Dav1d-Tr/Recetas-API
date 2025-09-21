@@ -27,6 +27,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+// 🔹 Forzar puerto dinámico en Render
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(port));
+});
+
 var app = builder.Build();
 
 // 🔹 Middleware de desarrollo
