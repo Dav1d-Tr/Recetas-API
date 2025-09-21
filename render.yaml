@@ -3,6 +3,7 @@ services:
     name: mi-api-recetas
     env: dotnet
     plan: free
+    dockerfilePath: ./Dockerfile
     buildCommand: "dotnet restore ./MiApiRecetas/MiApiRecetas.csproj && dotnet publish ./MiApiRecetas/MiApiRecetas.csproj -c Release -o out"
     startCommand: "dotnet out/MiApiRecetas.dll"
     envVars:
