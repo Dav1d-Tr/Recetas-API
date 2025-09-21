@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: recetas-api
+    runtime: dotnet
+    plan: free
+    buildCommand: "dotnet restore && dotnet publish -c Release -o out"
+    startCommand: "dotnet out/MiApiRecetas.dll"
+    envVars:
+      - key: ConnectionStrings__SqlServer
+        sync: false
